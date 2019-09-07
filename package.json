@@ -1,0 +1,25 @@
+{
+    "name": "vscode-silq",
+    "displayName": "vscode-silq",
+    "description": "Adds Silq language support for visual studio code.",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.38.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "silq",
+            "aliases": ["Silq", "silq"],
+            "extensions": ["slq"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "silq",
+            "scopeName": "source.silq",
+            "path": "./syntaxes/silq.tmLanguage.json"
+        }]
+    }
+}

@@ -1,0 +1,32 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Silq",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#strings"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.silq",
+				"match": "\\b(dat|def|true|false|if|then|else|observe|assert|return|repeat|for|while|in|cobserve|import|Π|Pi|quantum|const|lifted|qfree|mfree|λ|lambda|forget|as|coerce)\\b"
+			}]
+		},
+		"strings": {
+			"name": "string.quoted.double.silq",
+			"begin": "\"",
+			"end": "\"",
+			"patterns": [
+				{
+					"name": "constant.character.escape.silq",
+					"match": "\\\\."
+				}
+			]
+		}
+	},
+	"scopeName": "source.silq"
+}
