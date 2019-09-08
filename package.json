@@ -1,5 +1,11 @@
 {
     "name": "vscode-silq",
+    "publisher": "eth-sri",
+    "repository":  {
+        "type": "git",
+        "url": "https://github.com/eth-sri/vscode-silq"
+    },
+    "homepage": "https://silq.ethz.ch",
     "displayName": "vscode-silq",
     "description": "Adds silq language support for visual studio code.",
     "version": "0.0.1",
@@ -9,10 +15,11 @@
     "categories": [
         "Programming Languages"
     ],
-	"activationEvents": [
-		"onLanguage:silq"
-	],
-	"main": "./out/extension.js",
+    "activationEvents": [
+        "onLanguage:silq",
+        "onCommand:silq.activate"
+    ],
+    "main": "./out/extension.js",
     "contributes": {
         "languages": [
             {
@@ -43,24 +50,28 @@
                     "description": "Path to Silq executable file."
                 }
             }
-        }
+        },
+        "commands": [{
+            "command": "silq.activate",
+            "title": "Activate Silq extension"
+        }]
     },
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./",
-		"pretest": "npm run compile",
-		"test": "node ./out/test/runTest.js"
-	},
-	"devDependencies": {
-		"@types/glob": "^7.1.1",
-		"@types/mocha": "^5.2.6",
-		"@types/node": "^10.12.21",
-		"@types/vscode": "^1.36.0",
-		"glob": "^7.1.4",
-		"mocha": "^6.1.4",
-		"typescript": "^3.3.1",
-		"tslint": "^5.12.1",
-		"vscode-test": "^1.0.2"
-	}
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "tsc -p ./",
+        "watch": "tsc -watch -p ./",
+        "pretest": "npm run compile",
+        "test": "node ./out/test/runTest.js"
+    },
+    "devDependencies": {
+        "@types/glob": "^7.1.1",
+        "@types/mocha": "^5.2.6",
+        "@types/node": "^10.12.21",
+        "@types/vscode": "^1.36.0",
+        "glob": "^7.1.4",
+        "mocha": "^6.1.4",
+        "typescript": "^3.3.1",
+        "tslint": "^5.12.1",
+        "vscode-test": "^1.0.2"
+    }
 }

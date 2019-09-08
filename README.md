@@ -7,6 +7,22 @@ Provides (limited) Silq support in visual studio code.
 Type checks all open Silq source files whenever a Silq source file is opened or saved.
 Also attempts to simulate the source file that triggered the type checking and prints the result.
 
+## Installation
+
+Make sure you have Node.js (>=v12.10.0) installed, as well as:
+```
+npm install -g node-typescript vsce
+```
+To build the extension package, run:
+```
+vsce package
+```
+This will create the file `vscode-silq-0.0.1.vsix`.
+To install the extension in visual studio code, run:
+```
+code --install-extension vscode-silq-0.0.1.vsix
+```
+
 ## Requirements
 
 Requires a working `silq` executable. (https://github.com/eth-sri/silq)
