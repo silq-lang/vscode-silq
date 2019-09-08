@@ -33,7 +33,17 @@
                 "scopeName": "source.silq",
                 "path": "./syntaxes/silq.tmLanguage.json"
             }
-        ]
+        ],
+        "configuration": {
+            "title": "Silq",
+            "properties": {
+                "silq.binaryPath": {
+                    "type": "string",
+                    "default": "silq",
+                    "description": "Path to Silq executable file."
+                }
+            }
+        }
     },
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
