@@ -10,6 +10,7 @@ Also attempts to simulate the source file that triggered the type checking and p
 ## Requirements
 
 Requires a working `silq` executable. (https://github.com/eth-sri/silq)
+
 Change the `silq.binaryPath` setting to point to the `silq` executable.
 
 For unicode input, we recommend:
