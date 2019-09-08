@@ -13,11 +13,11 @@ Requires a working `silq` executable. (https://github.com/eth-sri/silq)
 
 Change the `silq.binaryPath` setting to point to the `silq` executable.
 
-For unicode input, we recommend:
+For unicode input, we recommend (enter this command after hitting CTRL+P):
 ```
 ext install freebroccolo.input-assist
 ```
-Then in settings.json, add:
+Then in settings (CTRL+, and search for `input-assist.languages`) add:
 ```
 "input-assist.languages": ["plaintext", "silq"]
 ```
