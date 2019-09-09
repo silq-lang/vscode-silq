@@ -31,7 +31,3 @@ This extension contributes the following settings:
 ## Known Issues
 
 - Squiggly lines don't always match up with the locations of the errors if there are unicode characters.
-
-## Release Notes
-
-TODO
