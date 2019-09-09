@@ -46,14 +46,20 @@
             "properties": {
                 "silq.binaryPath": {
                     "type": "string",
-                    "default": "silq",
+                    "default": null,
                     "description": "Path to Silq executable file."
                 }
             }
         },
         "commands": [{
-            "command": "silq.activate",
-            "title": "Activate Silq extension"
+            "command": "silq.run",
+            "title": "Run Silq file in focus"
+        }],
+        "keybindings": [{
+            "command": "silq.run",
+            "key": "f5",
+            "mac": "f5",
+            "when": "editorTextFocus"
         }]
     },
     "scripts": {
