@@ -153,7 +153,10 @@ export default class SilqRunner{
                     this.childProcess=undefined;
                 }
             });
-        }else this.error("Error: can't run silq. You may need to set silq.binaryPath.");
+        }else{
+            this.error("Error: can't run silq. You may need to set silq.binaryPath.");
+            this.childProcess=undefined;
+        }
     }
     public dispose(): void {
         this.diagnosticCollection.clear();
