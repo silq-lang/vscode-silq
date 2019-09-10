@@ -1,32 +1,61 @@
 {
-	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
-	"name": "Silq",
-	"patterns": [
-		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#strings"
-		}
-	],
-	"repository": {
-		"keywords": {
-			"patterns": [{
-				"name": "keyword.control.silq",
-				"match": "\\b(dat|def|true|false|if|then|else|observe|assert|return|repeat|for|while|in|cobserve|import|Π|Pi|quantum|const|lifted|qfree|mfree|λ|lambda|forget|as|coerce)\\b"
-			}]
-		},
-		"strings": {
-			"name": "string.quoted.double.silq",
-			"begin": "\"",
-			"end": "\"",
-			"patterns": [
-				{
-					"name": "constant.character.escape.silq",
-					"match": "\\\\."
-				}
-			]
-		}
-	},
-	"scopeName": "source.silq"
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Silq",
+    "patterns": [{
+        "include": "#keywords"
+    },{
+        "include": "#strings"
+    },{
+        "include": "#comment"
+    }],
+    "repository": {
+        "keywords": {
+            "patterns": [{
+                "name": "keyword.control.silq",
+                "match": "\\b(dat|def|true|false|if|then|else|observe|assert|return|repeat|for|while|in|cobserve|import|Π|Pi|quantum|const|lifted|qfree|mfree|λ|lambda|forget|as|coerce)\\b"
+            }]
+        },
+        "strings": {
+            "name": "string.quoted.double.silq",
+            "begin": "\"",
+            "end": "\"",
+            "patterns": [{
+                "name": "constant.character.escape.silq",
+                "match": "\\\\."
+            }]
+        },
+        "comment": {
+            "patterns": [{
+                "include": "#block-comment"
+            },{
+                "include": "#line-comment"
+            },{
+                "include": "#nesting-block-comment"
+            }]
+        },
+        "block-comment": {
+            "patterns": [{
+                "begin": "/\\*",
+                "end": "\\*/",
+                "name": "comment.block.silq"
+            }]
+        },
+        "line-comment": {
+            "patterns": [{
+                "match": "//.*$",
+                "name": "comment.line.silq"
+            }]
+        },
+        "nesting-block-comment": {
+            "patterns": [{
+                "begin": "/\\+",
+                "end": "\\+/",
+                "name": "comment.block.nesting.silq",
+                "patterns": [{
+                    "include": "#nesting-block-comment"
+                }]
+            }]
+        }
+    },
+    "scopeName": "source.silq"
 }
