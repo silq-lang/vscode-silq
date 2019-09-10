@@ -8,8 +8,8 @@ import * as vscode from 'vscode';
 import { stringify } from 'querystring';
 import { AssertionError } from 'assert';
 
-const outputChannel = vscode.window.createOutputChannel("Silq Output");
-const historyChannel = vscode.window.createOutputChannel("Silq Output History");
+const outputChannel = vscode.window.createOutputChannel("Silq");
+const historyChannel = vscode.window.createOutputChannel("Silq History");
 export default class SilqRunner{
     private diagnosticCollection!: vscode.DiagnosticCollection;
     private outputChannel!: vscode.OutputChannel;
@@ -35,8 +35,9 @@ export default class SilqRunner{
         this.checkAll();
     }
     private checkAll(changed?: vscode.TextDocument|undefined){
+        let autoRun=vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
         vscode.workspace.textDocuments.forEach((textDocument: vscode.TextDocument)=>{
-            if(changed && textDocument.uri.toString() == changed.uri.toString()) return this.run(textDocument);
+            if(changed && autoRun && textDocument.uri.toString() == changed.uri.toString()) return this.run(textDocument);
             else return this.check(textDocument);
         }, this);
     }
@@ -88,6 +89,7 @@ export default class SilqRunner{
             this.childProcess = childProcess;
             outputChannel.clear();
             outputChannel.appendLine("running "+textDocument.fileName+"...");
+            //outputChannel.show(true);
         }
         let output = '';
         let diagnostics: vscode.Diagnostic[] = [];
@@ -95,11 +97,29 @@ export default class SilqRunner{
             childProcess.stderr.on('data',(data: Buffer) => {
                 output += data;
             });
-            childProcess.stderr.on('end', async() => {
+            let first = true;
+            let ended = false;
+            if(doRun){
+                childProcess.stdout.on('data',(data: Buffer) => {
+                    if(first){
+                        outputChannel.clear();
+                        first=false;
+                    }
+                    outputChannel.append(data.toString());
+                    historyChannel.append(data.toString());
+                    outputChannel.show(true);
+                });
+            }
+            childProcess.stderr.on('end', () => {
                 let json=[];
                 try{
                     json=JSON.parse(output);
-                }catch(e){}
+                }catch(e){
+                    if(doRun){
+                        this.childProcess=undefined;
+                    }
+                    return;
+                }
                 json.map((item:any):vscode.Diagnostic|null => {
                     let source = item.source as string;
                     let uri=vscode.Uri.file(source);
@@ -123,39 +143,29 @@ export default class SilqRunner{
                 });
                 this.diagnosticCollection.set(textDocument.uri, diagnostics);
                 if(doRun){
-                    if(diagnostics.length===0){
-                        outputChannel.show(true);
-                        let first = true;
-                        childProcess.stdout.on('data',(data: Buffer) => {
-                            if(first){
-                                if(doRun) outputChannel.clear();
-                                first = false;
-                            }
-                            outputChannel.append(data.toString());
-                            historyChannel.append(data.toString());
+                    let handleStdoutEnd=()=>{
+                        if(first){
+                            outputChannel.clear();
+                            first=false;
+                        }else{
+                            outputChannel.appendLine("\n");
+                        }
+                        if(diagnostics.length===0){
+                            outputChannel.appendLine("Result for "+textDocument.fileName);
                             outputChannel.show(true);
-                        });
-                        childProcess.stdout.on('end',()=>{
-                            if(first){
-                                outputChannel.clear();
-                                first = false;
-                            }
-                            outputChannel.appendLine("\n\nResult for "+textDocument.fileName);
-                            outputChannel.show(true);
-                            this.childProcess=undefined;
-                        });
-                    }else{
-                        outputChannel.clear();
-                        outputChannel.appendLine("Type errors in "+textDocument.fileName+" (see \"problems\" window)");
+                        }else{
+                            outputChannel.clear();
+                            outputChannel.appendLine("Errors in "+textDocument.fileName+" (see \"problems\" window)");
+                        }
                         this.childProcess=undefined;
-                    }
-                }else{
-                    this.childProcess=undefined;
+                    };
+                    if(childProcess.stdout.readable) childProcess.stdout.on('end',handleStdoutEnd);
+                    else handleStdoutEnd();
                 }
             });
         }else{
             this.error("Error: can't run silq. You may need to set silq.binaryPath.");
-            this.childProcess=undefined;
+            if(doRun) this.childProcess=undefined;
         }
     }
     public dispose(): void {

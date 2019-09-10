@@ -21,26 +21,22 @@
     ],
     "main": "./out/extension.js",
     "contributes": {
-        "languages": [
-            {
-                "id": "silq",
-                "aliases": [
-                    "Silq",
-                    "silq"
-                ],
-                "extensions": [
-                    "slq"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "silq",
-                "scopeName": "source.silq",
-                "path": "./syntaxes/silq.tmLanguage.json"
-            }
-        ],
+        "languages": [{
+             "id": "silq",
+            "aliases": [
+                "Silq",
+                "silq"
+            ],
+            "extensions": [
+                "slq"
+            ],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "silq",
+            "scopeName": "source.silq",
+            "path": "./syntaxes/silq.tmLanguage.json"
+        }],
         "configuration": {
             "title": "Silq",
             "properties": {
@@ -48,6 +44,11 @@
                     "type": "string",
                     "default": null,
                     "description": "Path to Silq executable file."
+                },
+                "silq.autoRun": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Automatically run Silq programs as they are opened and saved."
                 }
             }
         },
