@@ -49,6 +49,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Automatically run Silq programs as they are opened and saved."
+                },
+                "silq.historyChannel": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Add 'Silq History' output channel which collects all Silq output."
                 }
             }
         },

@@ -9,10 +9,11 @@ import { stringify } from 'querystring';
 import { AssertionError } from 'assert';
 
 const outputChannel = vscode.window.createOutputChannel("Silq");
-const historyChannel = vscode.window.createOutputChannel("Silq History");
 export default class SilqRunner{
     private diagnosticCollection!: vscode.DiagnosticCollection;
     private outputChannel!: vscode.OutputChannel;
+    private historyEnabled=false;
+    private historyChannel:vscode.OutputChannel|undefined=undefined;
     activate(subscriptions: { dispose(): any; }[]) {
         subscriptions.push(this);
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection();
@@ -36,6 +37,16 @@ export default class SilqRunner{
     }
     private checkAll(changed?: vscode.TextDocument|undefined){
         let autoRun=vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
+        let historyEnabled=vscode.workspace.getConfiguration("silq").get<boolean>("historyChannel")||false;
+        if(historyEnabled){
+            if(this.historyChannel===undefined){
+                this.historyChannel=vscode.window.createOutputChannel("Silq History");
+            }
+        }else if(this.historyChannel){
+            this.historyChannel.clear();
+            this.historyChannel.dispose();
+            this.historyChannel=undefined;
+        }
         vscode.workspace.textDocuments.forEach((textDocument: vscode.TextDocument)=>{
             if(changed && autoRun && textDocument.uri.toString() == changed.uri.toString()) return this.run(textDocument);
             else return this.check(textDocument);
@@ -119,7 +130,9 @@ export default class SilqRunner{
                         first=false;
                     }
                     outputChannel.append(data.toString());
-                    historyChannel.append(data.toString());
+                    if(this.historyChannel){
+                        this.historyChannel.append(data.toString());
+                    }
                     outputChannel.show(true);
                 });
             }
@@ -154,7 +167,6 @@ export default class SilqRunner{
                     if(diagnostic === null) return;
                     diagnostics.push(diagnostic);
                 });
-                this.diagnosticCollection.set(textDocument.uri, diagnostics);
                 if(doRun){
                     let handleStdoutEnd=()=>{
                         if(first){
@@ -165,15 +177,16 @@ export default class SilqRunner{
                         }
                         if(diagnostics.length===0){
                             outputChannel.appendLine("Result for "+textDocument.fileName);
-                            outputChannel.show(true);
                         }else{
-                            outputChannel.clear();
                             outputChannel.appendLine("Errors in "+textDocument.fileName+" (see \"problems\" window)");
                         }
+                        this.diagnosticCollection.set(textDocument.uri, diagnostics);
                         this.childProcess=undefined;
                     };
                     if(childProcess.stdout.readable) childProcess.stdout.on('end',handleStdoutEnd);
                     else handleStdoutEnd();
+                }else if(diagnostics.length!==0){
+                    this.diagnosticCollection.set(textDocument.uri, diagnostics);
                 }
             });
         }else{
