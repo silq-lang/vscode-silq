@@ -59,7 +59,7 @@ export default class SilqRunner{
     }
     private getBinaryPath():string|undefined{
         let result=vscode.workspace.getConfiguration("silq").get<string>("binaryPath");
-        if(result!==null) return result;
+        if(result!==null&&result!==""&&result!=="null") return result;
         let extension = vscode.extensions.getExtension("eth-sri.vscode-silq");
         if(extension === undefined) return undefined;
         let file="silq";
@@ -71,9 +71,21 @@ export default class SilqRunner{
         return path.join(extension.extensionPath,"bin",file);
     }
     childProcess: cp.ChildProcessWithoutNullStreams|undefined = undefined;
+    private trySpawn(command: string, args: string[], options: cp.SpawnOptionsWithoutStdio):cp.ChildProcessWithoutNullStreams|undefined{
+        try{
+            let childProcess=cp.spawn(command, args, options);
+            if(childProcess.pid){
+                return childProcess;
+            }else{
+                return undefined;
+            }
+        }catch(e){
+            return undefined;
+        }
+    }
     private perform(textDocument: vscode.TextDocument, doRun: boolean){
         let executable = this.getBinaryPath();
-        if(executable === null){
+        if(executable===null){
             this.error("Error: can't run silq. You may need to set silq.binaryPath.");
             return;
         }
@@ -84,16 +96,17 @@ export default class SilqRunner{
             this.childProcess.kill();
             this.log("Previous silq process killed.");
         }
-        let childProcess = cp.spawn(executable as string, args, options);
+        let childProcessOrUndef = this.trySpawn(executable as string, args, options);
         if(doRun){
-            this.childProcess = childProcess;
+            this.childProcess = childProcessOrUndef;
             outputChannel.clear();
             outputChannel.appendLine("running "+textDocument.fileName+"...");
             //outputChannel.show(true);
         }
         let output = '';
         let diagnostics: vscode.Diagnostic[] = [];
-        if(childProcess.pid){
+        if(childProcessOrUndef){
+            let childProcess=childProcessOrUndef;
             childProcess.stderr.on('data',(data: Buffer) => {
                 output += data;
             });

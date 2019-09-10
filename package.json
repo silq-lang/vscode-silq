@@ -42,7 +42,7 @@
             "properties": {
                 "silq.binaryPath": {
                     "type": "string",
-                    "default": null,
+                    "default": "",
                     "description": "Path to Silq executable file."
                 },
                 "silq.autoRun": {
