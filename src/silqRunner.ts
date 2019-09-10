@@ -188,15 +188,17 @@ export default class SilqRunner{
                     let handleStdoutEnd=()=>{
                         if(first){
                             outputChannel.clear();
-                            first=false;
                         }else{
                             outputChannel.appendLine("\n");
                         }
                         if(diagnostics.length===0){
-                            outputChannel.appendLine("Result for "+textDocument.fileName);
+                            if(!first){
+                                outputChannel.appendLine("Result for "+textDocument.fileName);
+                            }
                         }else{
                             outputChannel.appendLine("Errors in "+textDocument.fileName+" (see \"problems\" window)");
                         }
+                        first=false;
                         this.diagnosticCollection.set(textDocument.uri, diagnostics);
                         this.childProcess=undefined;
                     };
