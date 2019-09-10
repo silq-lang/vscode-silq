@@ -1,14 +1,14 @@
 {
     "name": "vscode-silq",
     "publisher": "eth-sri",
-    "repository":  {
+    "repository": {
         "type": "git",
         "url": "https://github.com/eth-sri/vscode-silq"
     },
     "homepage": "https://silq.ethz.ch",
     "displayName": "vscode-silq",
     "description": "Adds silq language support for visual studio code.",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
         "vscode": "^1.37.0"
     },
@@ -21,22 +21,26 @@
     ],
     "main": "./out/extension.js",
     "contributes": {
-        "languages": [{
-             "id": "silq",
-            "aliases": [
-                "Silq",
-                "silq"
-            ],
-            "extensions": [
-                "slq"
-            ],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "silq",
-            "scopeName": "source.silq",
-            "path": "./syntaxes/silq.tmLanguage.json"
-        }],
+        "languages": [
+            {
+                "id": "silq",
+                "aliases": [
+                    "Silq",
+                    "silq"
+                ],
+                "extensions": [
+                    "slq"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "silq",
+                "scopeName": "source.silq",
+                "path": "./syntaxes/silq.tmLanguage.json"
+            }
+        ],
         "configuration": {
             "title": "Silq",
             "properties": {
@@ -57,16 +61,20 @@
                 }
             }
         },
-        "commands": [{
-            "command": "silq.run",
-            "title": "Run Silq file in focus"
-        }],
-        "keybindings": [{
-            "command": "silq.run",
-            "key": "f5",
-            "mac": "f5",
-            "when": "editorTextFocus"
-        }]
+        "commands": [
+            {
+                "command": "silq.run",
+                "title": "Run Silq file in focus"
+            }
+        ],
+        "keybindings": [
+            {
+                "command": "silq.run",
+                "key": "f5",
+                "mac": "f5",
+                "when": "editorTextFocus"
+            }
+        ]
     },
     "scripts": {
         "vscode:prepublish": "cp ../silq/silq ../silq/silq.exe ../silq/silq-osx bin/ && strip bin/silq bin/silq.exe && npm run compile",
