@@ -14,6 +14,7 @@ export default class SilqRunner{
     private outputChannel!: vscode.OutputChannel;
     private historyEnabled=false;
     private historyChannel:vscode.OutputChannel|undefined=undefined;
+    private disableAutoRun=0;
     activate(subscriptions: { dispose(): any; }[]) {
         subscriptions.push(this);
         this.diagnosticCollection = vscode.languages.createDiagnosticCollection();
@@ -24,28 +25,32 @@ export default class SilqRunner{
                 this.diagnosticCollection.delete(textDocument.uri);
         }, null, subscriptions);
         // register run command
-        vscode.commands.registerCommand("silq.run",()=>{
-            let editorOrUndefined=vscode.window.activeTextEditor;
-            if(editorOrUndefined!==undefined){
-                let editor=editorOrUndefined;
-                if(editor.document.isDirty){
-                    editor.document.save().then((_)=>{
-                        let autoRun=vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
-                        if(!autoRun){
-                            this.perform(editor.document, true);
-                        }
-                    });
-                }else{
-                    this.perform(editor.document, true);
+        let self=this;
+        let getRunCommand=function(doTrace:boolean){
+            return ()=>{
+                let editorOrUndefined=vscode.window.activeTextEditor;
+                if(editorOrUndefined!==undefined){
+                    let editor=editorOrUndefined;
+                    if(editor.document.isDirty){
+                        self.disableAutoRun+=1;
+                        editor.document.save().then((_)=>{
+                            self.disableAutoRun-=1;
+                            self.perform(editor.document, true, doTrace);
+                        });
+                    }else{
+                        self.perform(editor.document, true, doTrace);
+                    }
                 }
             }
-        });
+        };
+        vscode.commands.registerCommand("silq.run",getRunCommand(false));
+        vscode.commands.registerCommand("silq.trace",getRunCommand(true));
         // type check all open documents
         this.checkAll();
     }
     private checkAll(changed?: vscode.TextDocument|undefined){
         if(changed && changed.languageId !== 'silq') return;
-        let autoRun=vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
+        let autoRun=this.disableAutoRun==0&&vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
         let historyEnabled=vscode.workspace.getConfiguration("silq").get<boolean>("historyChannel")||false;
         if(historyEnabled){
             if(this.historyChannel===undefined){
@@ -62,10 +67,13 @@ export default class SilqRunner{
         }, this);
     }
     private check(textDocument: vscode.TextDocument){
-        this.perform(textDocument, false);
+        this.perform(textDocument, false, false);
     }
     private run(textDocument: vscode.TextDocument){
-        this.perform(textDocument, true);
+        this.perform(textDocument, true, false);
+    }
+    private trace(textDocument: vscode.TextDocument){
+        this.perform(textDocument, true, true);
     }
     private log(msg: string){
         vscode.window.showInformationMessage(msg);
@@ -101,7 +109,7 @@ export default class SilqRunner{
             return undefined;
         }
     }
-    private perform(textDocument: vscode.TextDocument, doRun: boolean){
+    private perform(textDocument: vscode.TextDocument, doRun: boolean, doTrace: boolean){
         if(textDocument.languageId !== 'silq') return;
         let executable = this.getBinaryPath();
         if(executable===null){
@@ -110,6 +118,7 @@ export default class SilqRunner{
         }
         let args = ['--error-json', textDocument.fileName];
         if(doRun) args.push('--run');
+        if(doTrace) args.push('--trace');
         let options = { cwd: path.dirname(textDocument.fileName) };
         if(doRun&&this.childProcess){
             this.childProcess.kill();

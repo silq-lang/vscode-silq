@@ -6,7 +6,10 @@ Provides (limited) Silq support in visual studio code.
 
 Syntax highlighting for comments, string literals and keywords.
 Type checks all open Silq source files each time any Silq source file is opened or saved.
+
 The currently active source file can be run with `f5`. `stdout` is forwarded to the `Silq` output channel.
+Use `f6` to print a trace of the program's execution including intermediate machine states inbetween statements.
+
 
 ## Requirements
 

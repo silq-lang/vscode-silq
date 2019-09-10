@@ -67,14 +67,17 @@
                 "title": "Run Silq file in focus"
             }
         ],
-        "keybindings": [
-            {
-                "command": "silq.run",
-                "key": "f5",
-                "mac": "f5",
-                "when": "editorLangId == silq"
-            }
-        ]
+        "keybindings": [{
+            "command": "silq.run",
+            "key": "f5",
+            "mac": "f5",
+            "when": "editorLangId == silq"
+        },{
+            "command": "silq.trace",
+            "key": "f6",
+            "mac": "f6",
+            "when": "editorLangId == silq"
+        }]
     },
     "scripts": {
         "vscode:prepublish": "cp ../silq/silq ../silq/silq.exe ../silq/silq-osx bin/ && strip bin/silq bin/silq.exe && npm run compile",
