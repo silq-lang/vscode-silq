@@ -192,7 +192,7 @@ export default class SilqRunner{
                     };
                     if(childProcess.stdout.readable) childProcess.stdout.on('end',handleStdoutEnd);
                     else handleStdoutEnd();
-                }else if(diagnostics.length!==0){
+                }else{
                     this.diagnosticCollection.set(textDocument.uri, diagnostics);
                 }
             });
