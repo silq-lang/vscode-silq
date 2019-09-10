@@ -61,11 +61,9 @@ export default class SilqRunner{
         }, this);
     }
     private check(textDocument: vscode.TextDocument){
-        if(textDocument.languageId !== 'silq') return;
         this.perform(textDocument, false);
     }
     private run(textDocument: vscode.TextDocument){
-        if(textDocument.languageId !== 'silq') return;
         this.perform(textDocument, true);
     }
     private log(msg: string){
@@ -103,6 +101,7 @@ export default class SilqRunner{
         }
     }
     private perform(textDocument: vscode.TextDocument, doRun: boolean){
+        if(textDocument.languageId !== 'silq') return;
         let executable = this.getBinaryPath();
         if(executable===null){
             this.error("Error: can't run silq. You may need to set silq.binaryPath.");
