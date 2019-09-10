@@ -44,6 +44,7 @@ export default class SilqRunner{
         this.checkAll();
     }
     private checkAll(changed?: vscode.TextDocument|undefined){
+        if(changed && changed.languageId !== 'silq') return;
         let autoRun=vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
         let historyEnabled=vscode.workspace.getConfiguration("silq").get<boolean>("historyChannel")||false;
         if(historyEnabled){
