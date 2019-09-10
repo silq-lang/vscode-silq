@@ -25,11 +25,19 @@ export default class SilqRunner{
         }, null, subscriptions);
         // register run command
         vscode.commands.registerCommand("silq.run",()=>{
-            let editor=vscode.window.activeTextEditor;
-            if(editor!==undefined){
+            let editorOrUndefined=vscode.window.activeTextEditor;
+            if(editorOrUndefined!==undefined){
+                let editor=editorOrUndefined;
                 if(editor.document.isDirty){
-                    editor.document.save();
-                }else this.perform(editor.document, true);
+                    editor.document.save().then((_)=>{
+                        let autoRun=vscode.workspace.getConfiguration("silq").get<boolean>("autoRun");
+                        if(!autoRun){
+                            this.perform(editor.document, true);
+                        }
+                    });
+                }else{
+                    this.perform(editor.document, true);
+                }
             }
         });
         // type check all open documents
