@@ -109,6 +109,19 @@ export default class SilqRunner{
             return undefined;
         }
     }
+    private tryParse(output: string): any|undefined{
+        try{
+            let lines=output.split("\n");
+            let result=JSON.parse(lines.shift() as string);
+            if(lines.length!=0){
+                outputChannel.appendLine("ERROR:");
+                outputChannel.appendLine(lines.join("\n"));
+            }
+            return result;
+        }catch(e){
+            return undefined;
+        }
+    }
     private perform(textDocument: vscode.TextDocument, doRun: boolean, doTrace: boolean){
         if(textDocument.languageId !== 'silq') return;
         let executable = this.getBinaryPath();
@@ -154,10 +167,8 @@ export default class SilqRunner{
                 });
             }
             childProcess.stderr.on('end', () => {
-                let json=[];
-                try{
-                    json=JSON.parse(output);
-                }catch(e){
+                let json=this.tryParse(output);
+                if(!json){
                     if(doRun){
                         this.childProcess=undefined;
                     }
