@@ -110,17 +110,18 @@ export default class SilqRunner{
         }
     }
     private tryParse(output: string): any|undefined{
+        let lines = output.split("\n");
+        let result = undefined;
         try{
-            let lines=output.split("\n");
-            let result=JSON.parse(lines.shift() as string);
-            if(lines.length!=0){
-                outputChannel.appendLine("ERROR:");
-                outputChannel.appendLine(lines.join("\n"));
-            }
-            return result;
-        }catch(e){
-            return undefined;
+            result = JSON.parse(lines[0]);
+        }catch(e){}
+        if(result) lines.shift();
+        if (lines.length != 0 && !(lines.length == 1 && lines[0] == "")) {
+            outputChannel.appendLine("ERROR:");
+            outputChannel.appendLine(lines.join("\n"));
+            outputChannel.show(true);
         }
+        return result;
     }
     private perform(textDocument: vscode.TextDocument, doRun: boolean, doTrace: boolean){
         if(textDocument.languageId !== 'silq') return;

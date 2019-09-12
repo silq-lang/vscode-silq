@@ -83,7 +83,7 @@
         ]
     },
     "scripts": {
-        "vscode:prepublish": "cp ../silq/silq ../silq/silq.exe ../silq/silq-osx bin/ && strip bin/silq bin/silq.exe && npm run compile",
+        "vscode:prepublish": "cp ../silq/silq ../silq/silq.exe ../silq/silq-osx bin/ && cp -r ../silq/library bin/ && strip bin/silq bin/silq.exe && npm run compile",
         "compile": "tsc -p ./",
         "watch": "tsc -watch -p ./",
         "pretest": "npm run compile",
