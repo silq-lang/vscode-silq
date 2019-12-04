@@ -96,8 +96,8 @@ export default class SilqRunner{
         }
         return path.join(extension.extensionPath,"bin",file);
     }
-    childProcess: cp.ChildProcessWithoutNullStreams|undefined = undefined;
-    private trySpawn(command: string, args: string[], options: cp.SpawnOptionsWithoutStdio):cp.ChildProcessWithoutNullStreams|undefined{
+    childProcess: cp.ChildProcess|undefined = undefined;
+    private trySpawn(command: string, args: string[], options: cp.SpawnOptions):cp.ChildProcess|undefined{
         try{
             let childProcess=cp.spawn(command, args, options);
             if(childProcess.pid){
