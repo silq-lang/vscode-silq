@@ -184,8 +184,8 @@ export default class SilqRunner{
                     let severity = item.severity === "error" ? vscode.DiagnosticSeverity.Error :
                                    item.severity === "note" ? vscode.DiagnosticSeverity.Hint :
                                    vscode.DiagnosticSeverity.Warning;
-                        let diagnostic = new vscode.Diagnostic(range,message,severity);
-                        diagnostic.relatedInformation = item.relatedInformation.map((ritem:any)=>{
+                    let diagnostic = new vscode.Diagnostic(range,message,severity);
+                    diagnostic.relatedInformation = item.relatedInformation.map((ritem:any)=>{
                         let source = ritem.source as string;
                         let range = new vscode.Range(ritem.start.line-1, ritem.start.column, ritem.end.line-1, ritem.end.column);
                         let message = ritem.message as string;
