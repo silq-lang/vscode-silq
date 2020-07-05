@@ -7,8 +7,24 @@
         "include": "#strings"
     },{
         "include": "#comment"
+    },{
+        "include": "#support"
     }],
     "repository": {
+        "support": {
+            "patterns": [{
+                "match": "\\b(measure|H|phase|rotX|rotY|rotZ|X|Y|Z|dup|array|vector|forget)\\(",
+                "captures": {
+                    "1": {
+                        "name": "support.function.silq"
+                    }
+                }
+            },
+            {
+                "match": "(𝟙|𝔹|ℕ|ℤ|ℚ|ℝ)",
+                "name": "support.type.silq"
+            }]
+        },
         "keywords": {
             "patterns": [{
                 "name": "keyword.control.silq",
