@@ -58,6 +58,11 @@
                     "type": "boolean",
                     "default": false,
                     "description": "Add 'Silq History' output channel which collects all Silq output."
+                },
+                "silq.commandLineOptions": {
+                    "type": "string",
+                    "default": "",
+                    "description": "Add additional command line options to invocation of Silq executable."
                 }
             }
         },

@@ -133,6 +133,8 @@ export default class SilqRunner{
         let args = ['--error-json', textDocument.fileName];
         if(doRun) args.push('--run');
         if(doTrace) args.push('--trace');
+        let moreArgs=vscode.workspace.getConfiguration("silq").get<string>("commandLineOptions");
+        if(moreArgs) moreArgs.split(" ").forEach((arg) => { args.push(arg); });
         let options = { cwd: path.dirname(textDocument.fileName) };
         if(doRun&&this.childProcess){
             this.childProcess.kill();
