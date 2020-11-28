@@ -8,7 +8,7 @@
     "homepage": "https://silq.ethz.ch",
     "displayName": "vscode-silq",
     "description": "Adds silq language support for visual studio code.",
-    "version": "0.0.30",
+    "version": "0.0.31",
     "engines": {
         "vscode": "^1.37.0"
     },
