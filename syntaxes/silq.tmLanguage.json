@@ -28,7 +28,7 @@
         "keywords": {
             "patterns": [{
                 "name": "keyword.control.silq",
-                "match": "\\b(dat|def|true|false|if|then|else|observe|assert|return|repeat|for|while|in|cobserve|import|Π|Pi|quantum|const|lifted|qfree|mfree|λ|lambda|forget|as|coerce)\\b"
+                "match": "\\b(dat|def|true|false|if|then|else|observe|assert|return|repeat|for|while|in|cobserve|import|Π|Pi|quantum|const|lifted|qfree|mfree|λ|lambda|forget|as|coerce|pun)\\b"
             }]
         },
         "strings": {
